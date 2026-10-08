@@ -476,11 +476,16 @@ export default function ReportDetailPage() {
               {docTypeLabel(report.doc_type)}
             </span>
 
-            {report.confidence && (
+            {report.needs_review || (typeof report.confidence === "number" && report.confidence < 0.7) ? (
+              <span className="text-[11px] text-amber-700 dark:text-amber-300 font-bold bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                {t("rep_please_verify")} ({((report.confidence || 0.5) * 100).toFixed(0)}%)
+              </span>
+            ) : report.confidence ? (
               <span className="text-[11px] text-foreground/60 font-medium glass px-2.5 py-0.5 rounded-full">
                 AI Confidence: {(report.confidence * 100).toFixed(0)}%
               </span>
-            )}
+            ) : null}
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
@@ -598,6 +603,7 @@ export default function ReportDetailPage() {
                     : t("status_normal");
 
                 const explanationText = getTestExplanation(test.id, test.explanation);
+                const isLowConfidenceTest = typeof test.confidence === "number" && test.confidence < 0.7;
 
                 return (
                   <div
@@ -609,9 +615,17 @@ export default function ReportDetailPage() {
                         <h4 className="text-sm font-bold text-foreground leading-snug">
                           {test.test_name}
                         </h4>
-                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0 ${statusBadge}`}>
-                          {statusLabel}
-                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {isLowConfidenceTest && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                              <AlertTriangle className="w-3 h-3 text-amber-500" />
+                              {t("rep_please_verify")}
+                            </span>
+                          )}
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shrink-0 ${statusBadge}`}>
+                            {statusLabel}
+                          </span>
+                        </div>
                       </div>
 
                       <div className="flex items-baseline gap-2">
@@ -657,7 +671,7 @@ export default function ReportDetailPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {medications.map((med) => {
-                const lowConfidence = typeof med.confidence === "number" && med.confidence < 0.6;
+                const lowConfidence = typeof med.confidence === "number" && med.confidence < 0.7;
                 const { instructions, purpose } = getMedDetails(med.id, med.instructions, med.purpose);
 
                 return (
@@ -754,24 +768,40 @@ export default function ReportDetailPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {conditions.map((cond) => (
-                <div
-                  key={cond.id}
-                  className="glass-strong p-4 rounded-2xl border border-white/30 dark:border-white/10 space-y-1.5"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <h4 className="text-sm font-bold text-foreground">{cond.name}</h4>
-                    {cond.status && (
-                      <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">
-                        {cond.status}
-                      </span>
+              {conditions.map((cond) => {
+                const isLowConfidenceCond = typeof cond.confidence === "number" && cond.confidence < 0.7;
+
+                return (
+                  <div
+                    key={cond.id}
+                    className={`glass-strong p-4 rounded-2xl border space-y-1.5 ${
+                      isLowConfidenceCond
+                        ? "border-amber-500/40 bg-amber-500/5"
+                        : "border-white/30 dark:border-white/10"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <h4 className="text-sm font-bold text-foreground">{cond.name}</h4>
+                      <div className="flex items-center gap-1.5">
+                        {isLowConfidenceCond && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3 text-amber-500" />
+                            {t("rep_please_verify")}
+                          </span>
+                        )}
+                        {cond.status && (
+                          <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">
+                            {cond.status}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {cond.notes && (
+                      <p className="text-xs text-foreground/70">{cond.notes}</p>
                     )}
                   </div>
-                  {cond.notes && (
-                    <p className="text-xs text-foreground/70">{cond.notes}</p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

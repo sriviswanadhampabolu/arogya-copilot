@@ -135,8 +135,8 @@ export const translations: Record<Language, Translations> = {
     rep_ref_range: "Ref Range",
     rep_please_verify: "Please verify",
 
-    disclaimer_medical: "Medical Disclaimer: Arogya Copilot is an AI health organizer and educational companion. It does not provide medical diagnoses, treatment decisions, or prescriptions. Always seek guidance from a qualified healthcare professional.",
-    disclaimer_chat: "Arogya Copilot provides health literacy and personal organization. It is not medical advice. In an emergency, please dial 112 immediately.",
+    disclaimer_medical: "Arogya Copilot provides information only and is not a substitute for professional medical advice. Always consult a qualified physician for diagnosis, treatment decisions, or changes to medication.",
+    disclaimer_chat: "Arogya Copilot provides information only and is not a substitute for professional medical advice. In an emergency, dial 112 immediately.",
   },
   te: {
     nav_dashboard: "డాష్‌బోర్డ్",
@@ -200,8 +200,8 @@ export const translations: Record<Language, Translations> = {
     rep_ref_range: "సాధారణ పరిధి",
     rep_please_verify: "ధృవీకరించండి",
 
-    disclaimer_medical: "వైద్య ప్రకటన: ఆరోగ్య కోపైలట్ ఆరోగ్య అవగాహన మరియు పత్రాల నిర్వహణకు మాత్రమే. ఇది వైద్య నిర్ధారణలు లేదా మందుల సిఫార్సులను అందించదు. ఎల్లప్పుడూ అర్హత కలిగిన వైద్యుడిని సంప్రదించండి.",
-    disclaimer_chat: "ఆరోగ్య కోపైలట్ విద్యా సహాయకారి మాత్రమే. అత్యవసర పరిస్థితుల్లో వెంటనే 112 కి కాల్ చేయండి.",
+    disclaimer_medical: "ఆరోగ్య కోపైలట్ కేవలం సమాచారాన్ని మాత్రమే అందిస్తుంది మరియు వృత్తిపరమైన వైద్య సలహాకు ప్రత్యామ్నాయం కాదు. వైద్య నిర్ణయాలు లేదా మందులలో మార్పుల కోసం ఎల్లప్పుడూ అర్హత కలిగిన వైద్యుడిని సంప్రదించండి.",
+    disclaimer_chat: "ఆరోగ్య కోపైలట్ కేవలం సమాచారాన్ని మాత్రమే అందిస్తుంది మరియు వృత్తిపరమైన వైద్య సలహాకు ప్రత్యామ్నాయం కాదు. అత్యవసర పరిస్థితుల్లో వెంటనే 112 కి కాల్ చేయండి.",
   },
   hi: {
     nav_dashboard: "डैशबोर्ड",
@@ -265,7 +265,7 @@ export const translations: Record<Language, Translations> = {
     rep_ref_range: "सामान्य सीमा",
     rep_please_verify: "सत्यापित करें",
 
-    disclaimer_medical: "चिकित्सा अस्वीकरण: आरोग्य को-पायलट स्वास्थ्य साक्षरता और दस्तावेज़ प्रबंधन के लिए है। यह चिकित्सा निदान या पर्चा प्रदान नहीं करता है। हमेशा योग्य चिकित्सक से परामर्श लें।",
-    disclaimer_chat: "आरोग्य को-पायलट केवल जानकारी के लिए है। किसी भी आपातकालीन स्थिति में तुरंत 112 डायल करें।",
+    disclaimer_medical: "आरोग्य कोपायलट केवल जानकारी प्रदान करता है और यह पेशेवर चिकित्सा सलाह का विकल्प नहीं है। किसी भी निदान, उपचार या दवा परिवर्तन के लिए हमेशा योग्य चिकित्सक से परामर्श लें।",
+    disclaimer_chat: "आरोग्य कोपायलट केवल जानकारी प्रदान करता है और यह पेशेवर चिकित्सा सलाह का विकल्प नहीं है। किसी भी आपातकालीन स्थिति में तुरंत 112 डायल करें।",
   },
 };
