@@ -4,6 +4,8 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useT } from "@/i18n/context";
 import { createClient } from "@/utils/supabase/client";
 import { Activity, LogOut, User as UserIcon, Shield, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
@@ -12,6 +14,7 @@ import type { User } from "@supabase/supabase-js";
 export function TopBar() {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useT();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -91,7 +94,8 @@ export function TopBar() {
         </Link>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageSwitcher />
           <ThemeToggle />
 
           {!loading && (
@@ -128,7 +132,7 @@ export function TopBar() {
                         className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs hover:bg-teal-500/10 text-foreground transition-colors"
                       >
                         <UserIcon className="w-4 h-4 text-teal-500" />
-                        My Health Profile
+                        {t("nav_my_profile")}
                       </Link>
 
                       <Link
@@ -137,7 +141,7 @@ export function TopBar() {
                         className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs hover:bg-teal-500/10 text-foreground transition-colors"
                       >
                         <Shield className="w-4 h-4 text-sky-500" />
-                        System Architecture
+                        {t("nav_architecture")}
                       </Link>
 
                       <div className="border-t border-black/5 dark:border-white/10 my-1" />
@@ -148,7 +152,7 @@ export function TopBar() {
                         className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-rose-500 hover:bg-rose-500/10 transition-colors font-medium text-left"
                       >
                         <LogOut className="w-4 h-4" />
-                        Sign Out
+                        {t("nav_sign_out")}
                       </button>
                     </div>
                   )}
@@ -161,14 +165,14 @@ export function TopBar() {
                       id="nav-login-btn"
                       className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-full hover:bg-teal-500/10 transition-colors text-foreground"
                     >
-                      Log In
+                      {t("nav_login")}
                     </Link>
                     <Link
                       href="/signup"
                       id="nav-signup-btn"
                       className="glass-button text-xs sm:text-sm !py-2 !px-4"
                     >
-                      Get Started
+                      {t("nav_get_started")}
                     </Link>
                   </div>
                 )
@@ -176,6 +180,7 @@ export function TopBar() {
             </>
           )}
         </div>
+
       </div>
     </header>
   );

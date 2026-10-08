@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/navigation/app-shell";
 import { createClient } from "@/utils/supabase/client";
 import ReactMarkdown from "react-markdown";
+import { useT } from "@/i18n/context";
 import {
   Send,
   Bot,
@@ -34,7 +35,9 @@ const SUGGESTED_CHIPS = [
 ];
 
 export default function ChatPage() {
+  const { lang, t } = useT();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(true);
@@ -136,7 +139,7 @@ export default function ChatPage() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, lang }),
       });
 
       if (!response.ok) {
@@ -246,8 +249,9 @@ export default function ChatPage() {
             title="Clear Chat History"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Clear Chat</span>
+            <span className="hidden sm:inline">{t("btn_clear_chat")}</span>
           </button>
+
         </div>
 
         {/* Prompt to upload documents if none exist */}
@@ -388,8 +392,9 @@ export default function ChatPage() {
 
           {/* Emergency & Medical Disclaimer */}
           <p className="text-[11px] text-center text-foreground/50 leading-tight px-4">
-            Arogya Copilot provides health literacy and personal organization. It is not medical advice. In an emergency, please dial <strong>112</strong> immediately.
+            {t("disclaimer_chat")}
           </p>
+
         </div>
       </div>
     </AppShell>

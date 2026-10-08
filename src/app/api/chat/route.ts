@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { message } = await req.json();
+    const { message, lang: clientLang } = await req.json();
 
     if (!message || typeof message !== "string" || !message.trim()) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
@@ -31,12 +31,15 @@ export async function POST(req: NextRequest) {
       .eq("id", user.id)
       .single();
 
+    const activeLang = clientLang || profile?.preferred_language || "en";
+
     const userProfile = {
       name: profile?.full_name || "Patient",
       age: profile?.age || null,
       gender: profile?.gender || null,
-      preferred_language: profile?.preferred_language || "en",
+      preferred_language: activeLang,
     };
+
 
     // 2. Fetch reports
     const { data: reports } = await supabase

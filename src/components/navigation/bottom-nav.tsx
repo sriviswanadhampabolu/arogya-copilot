@@ -10,15 +10,18 @@ import {
   UserCheck,
 } from "lucide-react";
 
-const mobileNavItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Upload", href: "/upload", icon: UploadCloud },
-  { name: "Chat", href: "/chat", icon: MessageSquare },
-  { name: "Profile", href: "/profile", icon: UserCheck },
-];
+import { useT } from "@/i18n/context";
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { t } = useT();
+
+  const mobileNavItems = [
+    { name: t("nav_dashboard"), href: "/dashboard", icon: LayoutDashboard },
+    { name: t("nav_upload"), href: "/upload", icon: UploadCloud },
+    { name: t("nav_chat"), href: "/chat", icon: MessageSquare },
+    { name: t("nav_profile"), href: "/profile", icon: UserCheck },
+  ];
 
   return (
     <nav

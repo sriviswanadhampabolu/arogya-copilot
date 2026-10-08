@@ -11,16 +11,19 @@ import {
   Layers,
 } from "lucide-react";
 
-export const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Upload", href: "/upload", icon: UploadCloud },
-  { name: "Copilot Chat", href: "/chat", icon: MessageSquare },
-  { name: "Profile", href: "/profile", icon: UserCheck },
-  { name: "Architecture", href: "/architecture", icon: Layers },
-];
+import { useT } from "@/i18n/context";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { t } = useT();
+
+  const navItems = [
+    { name: t("nav_dashboard"), href: "/dashboard", icon: LayoutDashboard },
+    { name: t("nav_upload"), href: "/upload", icon: UploadCloud },
+    { name: t("nav_chat"), href: "/chat", icon: MessageSquare },
+    { name: t("nav_profile"), href: "/profile", icon: UserCheck },
+    { name: t("nav_architecture"), href: "/architecture", icon: Layers },
+  ];
 
   return (
     <aside
@@ -43,7 +46,7 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                id={`sidebar-link-${item.name.toLowerCase().replace(/\s+/g, "-")}`}
+                id={`sidebar-link-${item.href.replace(/\//g, "")}`}
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-2xl text-sm font-medium transition-all duration-200 group ${
                   isActive
                     ? "bg-gradient-to-r from-teal-500/20 to-sky-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/30 shadow-sm"
@@ -63,6 +66,7 @@ export function Sidebar() {
               </Link>
             );
           })}
+
         </nav>
       </div>
 

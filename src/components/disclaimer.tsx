@@ -1,7 +1,12 @@
+"use client";
+
 import React from "react";
 import { AlertCircle } from "lucide-react";
+import { useT } from "@/i18n/context";
 
 export function HealthcareDisclaimer({ className = "" }: { className?: string }) {
+  const { t } = useT();
+
   return (
     <div
       role="note"
@@ -12,8 +17,9 @@ export function HealthcareDisclaimer({ className = "" }: { className?: string })
         <AlertCircle className="w-4 h-4" />
       </div>
       <p className="leading-relaxed">
-        <strong className="font-semibold text-foreground">Medical Disclaimer:</strong> Arogya Copilot is an AI health organizer and educational companion. It does not provide medical diagnoses, treatment decisions, or prescriptions. Always seek guidance from a qualified healthcare professional for medical concerns.
+        {t("disclaimer_medical")}
       </p>
     </div>
   );
 }
+

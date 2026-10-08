@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/navigation/app-shell";
 import { createClient } from "@/utils/supabase/client";
 import { useTheme } from "next-themes";
+import { useT } from "@/i18n/context";
 import {
   FileText,
   UploadCloud,
@@ -118,8 +119,10 @@ function AnimatedCounter({ value }: { value: number }) {
 export default function DashboardPage() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
+  const { t } = useT();
 
   const [loading, setLoading] = useState(true);
+
   const [profile, setProfile] = useState<Profile | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
   const [labValues, setLabValues] = useState<LabValue[]>([]);
@@ -374,14 +377,14 @@ export default function DashboardPage() {
                 {profile?.age && profile?.gender && <span>•</span>}
                 {profile?.gender && <span>{profile.gender}</span>}
                 <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                  ABHA not linked
+                  {t("status_abha_not_linked")}
                 </span>
               </div>
             </div>
 
             <Link href="/upload" className="glass-button text-xs sm:text-sm !py-2.5 !px-5 self-start sm:self-auto">
               <UploadCloud className="w-4 h-4" />
-              Upload New Document
+              {t("btn_upload_new")}
             </Link>
           </div>
 
@@ -391,20 +394,21 @@ export default function DashboardPage() {
               <Sparkles className="w-8 h-8" />
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-foreground">
-              Your Unified Health Record is Ready
+              {t("dash_empty_title")}
             </h2>
             <p className="text-xs sm:text-sm text-foreground/70 max-w-md mx-auto leading-relaxed">
-              Upload prescriptions, blood tests, discharge summaries, or diagnostic scans. Arogya Copilot automatically extracts biomarkers, organizes medications, and tracks health trends.
+              {t("dash_empty_desc")}
             </p>
             <div className="pt-3">
               <Link href="/upload" className="glass-button text-sm !py-3 !px-7 shadow-lg">
                 <UploadCloud className="w-4 h-4" />
-                Upload Your First Document
+                {t("btn_upload_new")}
               </Link>
             </div>
           </div>
         </div>
       </AppShell>
+
     );
   }
 
@@ -433,7 +437,7 @@ export default function DashboardPage() {
                     className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                    ABHA not linked
+                    {t("status_abha_not_linked")}
                   </span>
                 </div>
               </div>
@@ -447,7 +451,7 @@ export default function DashboardPage() {
               className="glass-button text-xs sm:text-sm !py-2.5 !px-5 shadow-md flex items-center gap-2"
             >
               <UploadCloud className="w-4 h-4" />
-              <span>Upload New Document</span>
+              <span>{t("btn_upload_new")}</span>
             </Link>
           </div>
         </div>
@@ -458,7 +462,7 @@ export default function DashboardPage() {
           <div className="glass p-5 rounded-3xl space-y-2 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <span className="text-xs text-foreground/70 font-semibold uppercase tracking-wider">
-                Total Documents
+                {t("dash_total_docs")}
               </span>
               <div className="p-2 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400">
                 <FileText className="w-4 h-4" />
@@ -474,7 +478,7 @@ export default function DashboardPage() {
           <div className="glass p-5 rounded-3xl space-y-2 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <span className="text-xs text-foreground/70 font-semibold uppercase tracking-wider">
-                Active Medicines
+                {t("dash_active_meds")}
               </span>
               <div className="p-2 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400">
                 <Pill className="w-4 h-4" />
@@ -490,7 +494,7 @@ export default function DashboardPage() {
           <div className="glass p-5 rounded-3xl space-y-2 relative overflow-hidden">
             <div className="flex items-center justify-between">
               <span className="text-xs text-foreground/70 font-semibold uppercase tracking-wider">
-                Abnormal In Latest Lab
+                {t("dash_abnormal_latest")}
               </span>
               <div
                 className={`p-2 rounded-xl ${
@@ -513,6 +517,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
+
         {/* (6) Health Trends Glass Card */}
         {testNames.length > 0 && (
           <div className="glass-strong p-6 sm:p-7 rounded-3xl space-y-5 border border-white/40 dark:border-white/10 shadow-md">
@@ -521,13 +526,14 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <Activity className="w-4 h-4 text-teal-500" />
                   <h2 className="text-base sm:text-lg font-bold text-foreground">
-                    Biomarker Health Trends
+                    {t("dash_trends_title")}
                   </h2>
                 </div>
                 <p className="text-xs text-foreground/60 pt-0.5">
-                  Chronological progression with shaded normal reference range band
+                  {t("dash_trends_subtitle")}
                 </p>
               </div>
+
 
               <div className="flex flex-wrap items-center gap-2.5">
                 {/* Status Badge: Improved / Worsened / Stable */}
@@ -640,7 +646,9 @@ export default function DashboardPage() {
                   <div className="p-1.5 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400">
                     <Pill className="w-4 h-4" />
                   </div>
-                  <h2 className="text-base font-bold text-foreground">Current Medicines</h2>
+                  <h2 className="text-base font-bold text-foreground">
+                    {t("dash_current_meds_title")}
+                  </h2>
                 </div>
                 <span className="text-xs font-semibold px-2 py-0.5 rounded-full glass text-foreground/70">
                   {medications.length} Prescribed
@@ -672,14 +680,14 @@ export default function DashboardPage() {
                       {med.frequency && (
                         <div className="flex items-center gap-1.5 text-[11px] text-teal-700 dark:text-teal-300 font-medium">
                           <Clock className="w-3 h-3 shrink-0" />
-                          <span>Schedule: {med.frequency}</span>
+                          <span>{t("rep_schedule")}: {med.frequency}</span>
                         </div>
                       )}
 
                       {(med.dosage || med.duration) && (
                         <div className="flex items-center gap-3 text-[11px] text-foreground/60">
-                          {med.dosage && <span>Dose: {med.dosage}</span>}
-                          {med.duration && <span>Duration: {med.duration}</span>}
+                          {med.dosage && <span>{t("rep_dose")}: {med.dosage}</span>}
+                          {med.duration && <span>{t("rep_duration")}: {med.duration}</span>}
                         </div>
                       )}
                     </div>
@@ -703,7 +711,9 @@ export default function DashboardPage() {
                   <div className="p-1.5 rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
                     <HeartPulse className="w-4 h-4" />
                   </div>
-                  <h2 className="text-base font-bold text-foreground">Conditions & Diagnoses</h2>
+                  <h2 className="text-base font-bold text-foreground">
+                    {t("dash_conditions_title")}
+                  </h2>
                 </div>
                 <span className="text-xs font-semibold px-2 py-0.5 rounded-full glass text-foreground/70">
                   {conditions.length} Tracked
@@ -754,8 +764,11 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-teal-500" />
-                <h2 className="text-lg font-bold text-foreground">Health Timeline</h2>
+                <h2 className="text-lg font-bold text-foreground">
+                  {t("dash_timeline_title")}
+                </h2>
               </div>
+
               <p className="text-xs text-foreground/60 pt-0.5">
                 All records chronological, grouped by month
               </p>

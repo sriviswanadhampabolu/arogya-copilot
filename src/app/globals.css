@@ -304,3 +304,12 @@ body {
     backdrop-filter: none;
   }
 }
+
+/* Multi-language font application */
+html[lang="te"], body[data-lang="te"] {
+  font-family: var(--font-noto-telugu), var(--font-plus-jakarta), sans-serif;
+}
+
+html[lang="hi"], body[data-lang="hi"] {
+  font-family: var(--font-noto-devanagari), var(--font-plus-jakarta), sans-serif;
+}
