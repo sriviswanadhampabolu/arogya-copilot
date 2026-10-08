@@ -279,11 +279,11 @@ export default function ArchitecturePage() {
                       </span>
                       <span className="text-xs text-foreground/40">•</span>
                       <h3 className="text-base font-bold text-foreground">
-                        FHIR R4 Bundle Builder &amp; ABHA Sandbox Link
+                        FHIR R4 Bundle Builder &amp; ABDM Adapter
                       </h3>
                     </div>
                     <p className="text-xs text-foreground/70 leading-relaxed max-w-2xl">
-                      Builds NRCeS / ABDM profile-compliant FHIR R4 bundles (type &ldquo;collection&rdquo;) with Patient, Practitioner, Observation, MedicationRequest, Condition, and Composition resources. Powers mock ABHA account linking and sample bundle imports.
+                      Builds NRCeS / ABDM profile-compliant FHIR R4 bundles (type &ldquo;collection&rdquo;) with Patient, Practitioner, Observation, MedicationRequest, Condition, and Composition resources. Ingests user card scans and FHIR bundles, with a pluggable adapter architecture (<code className="font-mono text-[10px]">src/lib/abdm/adapter.ts</code>) ready for live ABDM Gateway integration.
                     </p>
                   </div>
                 </div>
@@ -435,21 +435,21 @@ export default function ArchitecturePage() {
               </ul>
             </div>
 
-            {/* Card 4: ABDM readiness */}
+            {/* Card 4: ABDM Integration */}
             <div className="glass p-5 rounded-3xl space-y-3 border border-white/40 dark:border-white/10 shadow-sm flex flex-col justify-between">
               <div className="space-y-2">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                   <FileCheck2 className="w-4 h-4" />
                 </div>
-                <h3 className="text-sm font-bold text-foreground">ABDM Readiness</h3>
+                <h3 className="text-sm font-bold text-foreground">ABDM Integration</h3>
                 <p className="text-xs text-foreground/70 leading-relaxed">
-                  Adheres to Indian National Resource Centre for EHR Standards (NRCeS) FHIR R4 profiles. Features simulated ABHA linking, sandbox bundle importing, and one-click full health record JSON export.
+                  All clinical records adhere to ABDM-style HL7 FHIR R4 profiles (NRCeS). Today, ABHA details and records are self-declared or imported via user-provided ABHA card scans and FHIR JSON bundles; a live ABDM gateway (Sandbox Milestones M1, M2, M3) plugs in seamlessly through the adapter layer (<code className="font-mono text-[10px] text-teal-600 dark:text-teal-400">src/lib/abdm/adapter.ts</code>).
                 </p>
               </div>
               <ul className="text-[11px] text-foreground/60 space-y-1 pt-1 border-t border-white/20 dark:border-white/10">
-                <li>• FHIR R4 collection bundles</li>
-                <li>• Mock ABHA 14-digit linking</li>
-                <li>• Full record JSON export</li>
+                <li>• FHIR R4 ABDM-style bundles</li>
+                <li>• User card scans &amp; FHIR imports</li>
+                <li>• Pluggable NHA gateway adapter</li>
               </ul>
             </div>
           </div>

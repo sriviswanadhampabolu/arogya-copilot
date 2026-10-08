@@ -142,6 +142,12 @@ export default function ReportsPage() {
                           <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-foreground/75">
                             {label}
                           </span>
+                          {report.source === "fhir_import" && (
+                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                              FHIR import
+                            </span>
+                          )}
                           {report.source === "abha_import" && (
                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 flex items-center gap-1">
                               <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
