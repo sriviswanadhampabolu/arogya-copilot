@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { GoogleGenAI } from "@google/genai";
+import { buildFhirBundle, FhirUser, FhirReport, FhirTest, FhirMedication, FhirCondition } from "@/lib/fhir";
 
 export const maxDuration = 60; // Up to 60s for multimodal AI extraction
 
@@ -295,6 +296,71 @@ export async function POST(req: NextRequest) {
       if (condError) {
         console.warn("Conditions insert warning:", condError.message);
       }
+    }
+
+    // 5. Generate and store FHIR R4 Bundle
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, age, gender, abha_number")
+        .eq("id", user.id)
+        .single();
+
+      const fhirUser: FhirUser = {
+        id: user.id,
+        name: profile?.full_name || user.email?.split("@")[0] || "Patient",
+        age: profile?.age ?? null,
+        gender: profile?.gender ?? null,
+        abha_number: profile?.abha_number ?? null,
+      };
+
+      const fhirReport: FhirReport = {
+        id: reportId,
+        doc_type: result.doc_type || "other",
+        title: result.title || "Health Document",
+        report_date: safeReportDate,
+        doctor_name: result.doctor_name || null,
+        facility: result.facility || null,
+        summary: result.summary || null,
+      };
+
+      const fhirTests: FhirTest[] = (result.tests || []).map((t) => ({
+        test_name: t.test_name,
+        value: typeof t.value === "number" ? t.value : Number(t.value) || 0,
+        unit: t.unit || "",
+        ref_low: t.ref_low,
+        ref_high: t.ref_high,
+        ref_text: t.ref_text,
+        status: t.status,
+        loinc_code: t.loinc_code,
+        explanation: t.explanation,
+      }));
+
+      const fhirMeds: FhirMedication[] = (result.medicines || []).map((m) => ({
+        name: m.name,
+        generic_name: m.generic_name,
+        strength: m.strength,
+        dosage: m.dosage,
+        frequency: m.frequency,
+        duration: m.duration,
+        instructions: m.instructions,
+        purpose: m.purpose,
+      }));
+
+      const fhirConditions: FhirCondition[] = (result.conditions || []).map((c) => ({
+        name: c.name,
+        status: c.status,
+        notes: c.notes,
+      }));
+
+      const fhirBundle = buildFhirBundle(fhirUser, fhirReport, fhirTests, fhirMeds, fhirConditions);
+
+      await supabase
+        .from("reports")
+        .update({ fhir_bundle: fhirBundle })
+        .eq("id", reportId);
+    } catch (fhirErr) {
+      console.warn("FHIR bundle generation warning:", fhirErr);
     }
 
     return NextResponse.json({

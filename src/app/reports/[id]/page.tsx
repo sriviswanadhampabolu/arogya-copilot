@@ -24,9 +24,12 @@ import {
   Info,
   Languages,
   Loader2,
+  Code2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { FhirModal } from "@/components/fhir/fhir-modal";
+import { buildFhirBundle, FhirUser, FhirReport, FhirTest, FhirMedication, FhirCondition, FhirBundle } from "@/lib/fhir";
 
 interface ReportDetail {
   id: string;
@@ -44,6 +47,7 @@ interface ReportDetail {
   language_detected: string;
   created_at: string;
   translations?: Record<string, TranslationData>;
+  fhir_bundle?: FhirBundle | null;
 }
 
 interface LabValueItem {
@@ -104,6 +108,7 @@ export default function ReportDetailPage() {
   const [onlyAbnormal, setOnlyAbnormal] = useState(false);
   const [signedDocUrl, setSignedDocUrl] = useState<string | null>(null);
   const [loadingDocUrl, setLoadingDocUrl] = useState(false);
+  const [showFhirModal, setShowFhirModal] = useState(false);
 
   // Translation State
   const [currentTranslation, setCurrentTranslation] = useState<TranslationData | null>(null);
@@ -282,6 +287,54 @@ export default function ReportDetailPage() {
     };
   };
 
+  const activeFhirBundle = useMemo(() => {
+    if (report?.fhir_bundle) return report.fhir_bundle;
+    if (!report) return null;
+    const userObj: FhirUser = {
+      id: "current-user",
+      name: "Patient",
+    };
+    const repObj: FhirReport = {
+      id: report.id,
+      doc_type: report.doc_type,
+      title: report.title,
+      report_date: report.report_date,
+      doctor_name: report.doctor_name,
+      facility: report.facility,
+      summary: report.summary,
+    };
+    const testObjs: FhirTest[] = labValues.map((t) => ({
+      id: t.id,
+      test_name: t.test_name,
+      value: t.value,
+      unit: t.unit,
+      ref_low: t.ref_low,
+      ref_high: t.ref_high,
+      ref_text: t.ref_text,
+      status: t.status,
+      loinc_code: t.loinc_code,
+      explanation: t.explanation,
+    }));
+    const medObjs: FhirMedication[] = medications.map((m) => ({
+      id: m.id,
+      name: m.name,
+      generic_name: m.generic_name,
+      strength: m.strength,
+      dosage: m.dosage,
+      frequency: m.frequency,
+      duration: m.duration,
+      instructions: m.instructions,
+      purpose: m.purpose,
+    }));
+    const condObjs: FhirCondition[] = conditions.map((c) => ({
+      id: c.id,
+      name: c.name,
+      status: c.status,
+      notes: c.notes,
+    }));
+    return buildFhirBundle(userObj, repObj, testObjs, medObjs, condObjs);
+  }, [report, labValues, medications, conditions]);
+
   if (loading) {
     return (
       <AppShell>
@@ -314,6 +367,16 @@ export default function ReportDetailPage() {
           </Link>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowFhirModal(true)}
+              className="glass-button text-xs !py-1.5 !px-3.5 flex items-center gap-1.5 bg-teal-500/10 hover:bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/30"
+              title="View ABDM FHIR R4 Bundle"
+            >
+              <Code2 className="w-3.5 h-3.5" />
+              <span>FHIR Record</span>
+            </button>
+
             {report.file_path && (
               <button
                 type="button"
@@ -744,6 +807,13 @@ export default function ReportDetailPage() {
           </div>
         )}
       </div>
+
+      <FhirModal
+        isOpen={showFhirModal}
+        onClose={() => setShowFhirModal(false)}
+        bundle={activeFhirBundle}
+        title={report.title}
+      />
     </AppShell>
   );
 }

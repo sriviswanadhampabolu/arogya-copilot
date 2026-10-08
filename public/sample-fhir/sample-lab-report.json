@@ -1,0 +1,409 @@
+{
+  "resourceType": "Bundle",
+  "id": "sample-lab-report-bundle-002",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2026-10-04T07:45:00.000Z",
+    "profile": [
+      "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+    ]
+  },
+  "identifier": {
+    "system": "https://healthid.ndhm.gov.in/records",
+    "value": "ABDM-LAB-2026-08421"
+  },
+  "type": "collection",
+  "timestamp": "2026-10-04T07:45:00.000Z",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:comp-lab-001",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "comp-lab-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord"
+          ]
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "721981007",
+              "display": "Diagnostic studies report"
+            }
+          ],
+          "text": "Comprehensive Metabolic & Lipid Diagnostic Panel"
+        },
+        "subject": {
+          "reference": "urn:uuid:pat-001",
+          "display": "Demo Patient"
+        },
+        "date": "2026-10-04T07:45:00.000Z",
+        "author": [
+          {
+            "reference": "urn:uuid:prac-lab-001",
+            "display": "Dr. Sunita Rao, MD (Biochemistry)"
+          }
+        ],
+        "title": "Comprehensive Metabolic & Lipid Panel",
+        "section": [
+          {
+            "title": "Diagnostic Investigations",
+            "entry": [
+              { "reference": "urn:uuid:obs-fbg-001", "display": "Fasting Blood Glucose" },
+              { "reference": "urn:uuid:obs-hba1c-002", "display": "HbA1c (Glycated Hemoglobin)" },
+              { "reference": "urn:uuid:obs-creat-003", "display": "Serum Creatinine" },
+              { "reference": "urn:uuid:obs-chol-004", "display": "Total Cholesterol" },
+              { "reference": "urn:uuid:obs-hb-005", "display": "Hemoglobin" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:pat-001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "https://healthid.ndhm.gov.in",
+            "value": "91-8274-1928-3019"
+          }
+        ],
+        "name": [
+          {
+            "text": "Demo Patient"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1990-05-15"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:prac-lab-001",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "prac-lab-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
+          ]
+        },
+        "name": [
+          {
+            "text": "Dr. Sunita Rao, MD (Biochemistry)"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:diag-rep-001",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "diag-rep-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportLab"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "text": "Comprehensive Metabolic & Lipid Diagnostic Panel"
+        },
+        "subject": {
+          "reference": "urn:uuid:pat-001",
+          "display": "Demo Patient"
+        },
+        "effectiveDateTime": "2026-10-04T07:45:00.000Z",
+        "issued": "2026-10-04T12:00:00.000Z",
+        "performer": [
+          {
+            "reference": "urn:uuid:prac-lab-001",
+            "display": "Vijaya Diagnostic Centre, Indiranagar"
+          }
+        ],
+        "result": [
+          { "reference": "urn:uuid:obs-fbg-001", "display": "Fasting Blood Glucose" },
+          { "reference": "urn:uuid:obs-hba1c-002", "display": "HbA1c" },
+          { "reference": "urn:uuid:obs-creat-003", "display": "Serum Creatinine" },
+          { "reference": "urn:uuid:obs-chol-004", "display": "Total Cholesterol" },
+          { "reference": "urn:uuid:obs-hb-005", "display": "Hemoglobin" }
+        ],
+        "conclusion": "Mild fasting hyperglycemia and borderline hypercholesterolemia. Renal function remains within expected physiological limits."
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:obs-fbg-001",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-fbg-001",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1558-6",
+              "display": "Fasting Glucose in Serum/Plasma"
+            }
+          ],
+          "text": "Fasting Blood Glucose"
+        },
+        "subject": {
+          "reference": "urn:uuid:pat-001",
+          "display": "Demo Patient"
+        },
+        "effectiveDateTime": "2026-10-04T07:45:00.000Z",
+        "valueQuantity": {
+          "value": 138,
+          "unit": "mg/dL"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "H",
+                "display": "High"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": { "value": 70, "unit": "mg/dL" },
+            "high": { "value": 99, "unit": "mg/dL" },
+            "text": "70 - 99 mg/dL"
+          }
+        ],
+        "note": [
+          { "text": "Elevated fasting blood sugar indicating impaired glucose control." }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:obs-hba1c-002",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-hba1c-002",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c/Hemoglobin.total in Blood"
+            }
+          ],
+          "text": "HbA1c (Glycated Hemoglobin)"
+        },
+        "subject": {
+          "reference": "urn:uuid:pat-001",
+          "display": "Demo Patient"
+        },
+        "effectiveDateTime": "2026-10-04T07:45:00.000Z",
+        "valueQuantity": {
+          "value": 7.2,
+          "unit": "%"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "H",
+                "display": "High"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": { "value": 4.0, "unit": "%" },
+            "high": { "value": 5.6, "unit": "%" },
+            "text": "4.0 - 5.6 %"
+          }
+        ],
+        "note": [
+          { "text": "Represents 3-month average glucose levels above standard glycemic target." }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:obs-creat-003",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-creat-003",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Creatinine in Serum or Plasma"
+            }
+          ],
+          "text": "Serum Creatinine"
+        },
+        "subject": {
+          "reference": "urn:uuid:pat-001",
+          "display": "Demo Patient"
+        },
+        "effectiveDateTime": "2026-10-04T07:45:00.000Z",
+        "valueQuantity": {
+          "value": 0.95,
+          "unit": "mg/dL"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "N",
+                "display": "Normal"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": { "value": 0.7, "unit": "mg/dL" },
+            "high": { "value": 1.3, "unit": "mg/dL" },
+            "text": "0.7 - 1.3 mg/dL"
+          }
+        ],
+        "note": [
+          { "text": "Kidney filtration biomarker is normal." }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:obs-chol-004",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-chol-004",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2093-3",
+              "display": "Cholesterol in Serum or Plasma"
+            }
+          ],
+          "text": "Total Cholesterol"
+        },
+        "subject": {
+          "reference": "urn:uuid:pat-001",
+          "display": "Demo Patient"
+        },
+        "effectiveDateTime": "2026-10-04T07:45:00.000Z",
+        "valueQuantity": {
+          "value": 215,
+          "unit": "mg/dL"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "H",
+                "display": "High"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": { "value": 125, "unit": "mg/dL" },
+            "high": { "value": 200, "unit": "mg/dL" },
+            "text": "< 200 mg/dL"
+          }
+        ],
+        "note": [
+          { "text": "Slightly elevated circulating total cholesterol." }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:obs-hb-005",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-hb-005",
+        "meta": {
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Observation"
+          ]
+        },
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "display": "Hemoglobin in Blood"
+            }
+          ],
+          "text": "Hemoglobin"
+        },
+        "subject": {
+          "reference": "urn:uuid:pat-001",
+          "display": "Demo Patient"
+        },
+        "effectiveDateTime": "2026-10-04T07:45:00.000Z",
+        "valueQuantity": {
+          "value": 14.2,
+          "unit": "g/dL"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "N",
+                "display": "Normal"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": { "value": 13.0, "unit": "g/dL" },
+            "high": { "value": 17.0, "unit": "g/dL" },
+            "text": "13.0 - 17.0 g/dL"
+          }
+        ],
+        "note": [
+          { "text": "Adequate oxygen-carrying capacity with no signs of anemia." }
+        ]
+      }
+    }
+  ]
+}

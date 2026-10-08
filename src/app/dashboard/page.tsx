@@ -40,6 +40,9 @@ interface Profile {
   full_name: string | null;
   age: number | null;
   gender: string | null;
+  abha_number?: string | null;
+  abha_address?: string | null;
+  abha_linked?: boolean | null;
 }
 
 interface Report {
@@ -49,6 +52,7 @@ interface Report {
   report_date: string | null;
   doctor_name: string | null;
   facility: string | null;
+  source?: string | null;
   created_at: string;
 }
 
@@ -151,7 +155,7 @@ export default function DashboardPage() {
         // Fetch profile
         const { data: prof } = await supabase
           .from("profiles")
-          .select("full_name, age, gender")
+          .select("full_name, age, gender, abha_number, abha_address, abha_linked")
           .eq("id", user.id)
           .single();
         if (prof) setProfile(prof);
@@ -159,7 +163,7 @@ export default function DashboardPage() {
         // Fetch reports (ordered newest first)
         const { data: reps } = await supabase
           .from("reports")
-          .select("id, doc_type, title, report_date, doctor_name, facility, created_at")
+          .select("id, doc_type, title, report_date, doctor_name, facility, source, created_at")
           .order("report_date", { ascending: false, nullsFirst: false })
           .order("created_at", { ascending: false });
         if (reps) setReports(reps);
@@ -376,9 +380,24 @@ export default function DashboardPage() {
                 {profile?.age && <span>{profile.age} yrs</span>}
                 {profile?.age && profile?.gender && <span>•</span>}
                 {profile?.gender && <span>{profile.gender}</span>}
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                  {t("status_abha_not_linked")}
-                </span>
+                {profile?.abha_linked ? (
+                  <span
+                    title={`ABHA: ${profile.abha_address || profile.abha_number || "Linked"}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-sm"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    ABHA linked (demo)
+                  </span>
+                ) : (
+                  <Link
+                    href="/profile"
+                    title="Link your ABHA ID (Demo)"
+                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-colors"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    {t("status_abha_not_linked")}
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -432,13 +451,24 @@ export default function DashboardPage() {
                   {profile?.gender && <span>{profile.gender}</span>}
                   <span>•</span>
                   {/* ABHA Chip */}
-                  <span
-                    title="Ayushman Bharat Health Account integration coming soon"
-                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                    {t("status_abha_not_linked")}
-                  </span>
+                  {profile?.abha_linked ? (
+                    <span
+                      title={`ABHA: ${profile.abha_address || profile.abha_number || "Linked"}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-sm"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      ABHA linked (demo)
+                    </span>
+                  ) : (
+                    <Link
+                      href="/profile"
+                      title="Link your ABHA ID (Demo)"
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-colors"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      {t("status_abha_not_linked")}
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -871,6 +901,12 @@ export default function DashboardPage() {
                                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30 flex items-center gap-1">
                                       <ShieldAlert className="w-3 h-3" />
                                       {badges.abnormalCount} abnormal
+                                    </span>
+                                  )}
+                                  {report.source === "abha_import" && (
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 flex items-center gap-1">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                                      ABHA import
                                     </span>
                                   )}
                                 </div>
