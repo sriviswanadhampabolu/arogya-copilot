@@ -112,7 +112,7 @@ HEALTH DATA (JSON): ${JSON.stringify(healthData)}`;
     }
 
     const ai = new GoogleGenAI({ apiKey });
-    const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const modelName = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 
     // Call generateContentStream
     const responseStream = await ai.models.generateContentStream({

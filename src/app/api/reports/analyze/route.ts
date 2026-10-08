@@ -95,21 +95,29 @@ async function callGemini(
   base64Data: string,
   mimeType: string
 ): Promise<GeminiExtractionResult> {
-  const response = await ai.models.generateContent({
-    model: modelName,
-    contents: [
-      {
-        inlineData: {
-          mimeType: mimeType,
-          data: base64Data,
+  let response;
+  try {
+    response = await ai.models.generateContent({
+      model: modelName,
+      contents: [
+        {
+          inlineData: {
+            mimeType: mimeType,
+            data: base64Data,
+          },
         },
+        PROMPT_TEXT,
+      ],
+      config: {
+        responseMimeType: "application/json",
       },
-      PROMPT_TEXT,
-    ],
-    config: {
-      responseMimeType: "application/json",
-    },
-  });
+    });
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    const geminiError = new Error(errorMsg);
+    (geminiError as unknown as { stage: string }).stage = "Gemini call";
+    throw geminiError;
+  }
 
   const rawText = response.text || "";
   const cleaned = stripMarkdownJson(rawText);
@@ -118,8 +126,15 @@ async function callGemini(
     return JSON.parse(cleaned) as GeminiExtractionResult;
   } catch {
     // Retry parse once with secondary cleanup if needed
-    const secondPass = cleaned.replace(/^[^{]*/, "").replace(/[^}]*$/, "");
-    return JSON.parse(secondPass) as GeminiExtractionResult;
+    try {
+      const secondPass = cleaned.replace(/^[^{]*/, "").replace(/[^}]*$/, "");
+      return JSON.parse(secondPass) as GeminiExtractionResult;
+    } catch (parseErr2) {
+      const errorMsg = parseErr2 instanceof Error ? parseErr2.message : String(parseErr2);
+      const jsonError = new Error(`Failed to parse Gemini JSON output: ${errorMsg}`);
+      (jsonError as unknown as { stage: string }).stage = "JSON parse";
+      throw jsonError;
+    }
   }
 }
 
@@ -134,25 +149,38 @@ export async function POST(req: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ success: false, stage: "storage upload", error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
     const { filePath, fileType } = body;
 
     if (!filePath) {
-      return NextResponse.json({ error: "Missing filePath" }, { status: 400 });
+      return NextResponse.json({ success: false, stage: "storage upload", error: "Missing filePath" }, { status: 400 });
     }
 
     // Download the file from Supabase storage "reports" bucket
-    const { data: fileBlob, error: downloadError } = await supabase.storage
-      .from("reports")
-      .download(filePath);
+    let fileBlob: Blob | null = null;
+    try {
+      const { data: downloadedData, error: downloadError } = await supabase.storage
+        .from("reports")
+        .download(filePath);
 
-    if (downloadError || !fileBlob) {
+      if (downloadError || !downloadedData) {
+        const errMsg = downloadError?.message || "File not found in storage";
+        console.error(`[analyze: download file] ${errMsg}`, downloadError);
+        return NextResponse.json(
+          { success: false, stage: "download file", error: errMsg },
+          { status: 404 }
+        );
+      }
+      fileBlob = downloadedData;
+    } catch (dlErr: unknown) {
+      const errMsg = dlErr instanceof Error ? dlErr.message : "Download exception";
+      console.error(`[analyze: download file] ${errMsg}`, dlErr);
       return NextResponse.json(
-        { error: `Failed to download file from storage: ${downloadError?.message || "File not found"}` },
-        { status: 404 }
+        { success: false, stage: "download file", error: errMsg },
+        { status: 500 }
       );
     }
 
@@ -163,35 +191,49 @@ export async function POST(req: NextRequest) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: "GEMINI_API_KEY is not configured" }, { status: 500 });
+      console.error("[analyze: Gemini call] GEMINI_API_KEY is not configured in .env.local");
+      return NextResponse.json(
+        { success: false, stage: "Gemini call", error: "GEMINI_API_KEY is not configured" },
+        { status: 500 }
+      );
     }
 
     const ai = new GoogleGenAI({ apiKey });
-    const standardModel = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const standardModel = process.env.GEMINI_MODEL || "gemini-3.5-flash";
     const strongModel = process.env.GEMINI_MODEL_STRONG;
 
     let result: GeminiExtractionResult;
     try {
-      result = await callGemini(ai, standardModel, base64Data, mimeType);
-    } catch (primaryErr) {
-      console.warn("Primary Gemini call failed, attempting fallback:", primaryErr);
-      if (strongModel) {
-        result = await callGemini(ai, strongModel, base64Data, mimeType);
-      } else {
-        throw primaryErr;
-      }
-    }
-
-    // If confidence is low or needs_review, run strong model if configured
-    if ((result.overall_confidence < 0.6 || result.needs_review) && strongModel && strongModel !== standardModel) {
       try {
-        const strongResult = await callGemini(ai, strongModel, base64Data, mimeType);
-        if (strongResult.overall_confidence > result.overall_confidence) {
-          result = strongResult;
+        result = await callGemini(ai, standardModel, base64Data, mimeType);
+      } catch (primaryErr: unknown) {
+        console.warn(`[analyze: Gemini call] Primary model (${standardModel}) failed:`, primaryErr);
+        if (strongModel && strongModel !== standardModel) {
+          result = await callGemini(ai, strongModel, base64Data, mimeType);
+        } else {
+          throw primaryErr;
         }
-      } catch (strongErr) {
-        console.warn("Strong model run failed, keeping standard result:", strongErr);
       }
+
+      // If confidence is low or needs_review, run strong model if configured
+      if ((result.overall_confidence < 0.6 || result.needs_review) && strongModel && strongModel !== standardModel) {
+        try {
+          const strongResult = await callGemini(ai, strongModel, base64Data, mimeType);
+          if (strongResult.overall_confidence > result.overall_confidence) {
+            result = strongResult;
+          }
+        } catch (strongErr) {
+          console.warn("[analyze: Gemini call] Strong model fallback warning:", strongErr);
+        }
+      }
+    } catch (aiErr: unknown) {
+      const stage = (aiErr as { stage?: string })?.stage || "Gemini call";
+      const errMsg = aiErr instanceof Error ? aiErr.message : "AI model invocation failed";
+      console.error(`[analyze: ${stage}]`, aiErr);
+      return NextResponse.json(
+        { success: false, stage, error: errMsg },
+        { status: 500 }
+      );
     }
 
     // Format safe document date
@@ -224,9 +266,10 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (reportInsertError || !reportRow) {
-      console.error("Report insert error:", reportInsertError);
+      const errMsg = reportInsertError?.message || "Failed to insert record into reports table";
+      console.error("[analyze: database insert] Error inserting report:", reportInsertError);
       return NextResponse.json(
-        { error: `Database error inserting report: ${reportInsertError?.message}` },
+        { success: false, stage: "database insert", error: errMsg },
         { status: 500 }
       );
     }
@@ -370,8 +413,9 @@ export async function POST(req: NextRequest) {
       summary: result.summary,
     });
   } catch (err: unknown) {
-    console.error("Analyze API error:", err);
+    const stage = (err as { stage?: string })?.stage || "database insert";
     const msg = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error(`[analyze: ${stage}]`, err);
+    return NextResponse.json({ success: false, stage, error: msg }, { status: 500 });
   }
 }

@@ -140,7 +140,9 @@ export default function UploadPage() {
         });
 
       if (uploadError) {
-        throw new Error(`Upload error: ${uploadError.message}`);
+        const err = new Error(uploadError.message);
+        (err as unknown as { stage: string }).stage = "storage upload";
+        throw err;
       }
 
       // Step 1: Reading document (OCR)
@@ -169,10 +171,19 @@ export default function UploadPage() {
       clearTimeout(stepTimer1);
       clearTimeout(stepTimer2);
 
-      const data = await response.json();
+      let data: { success?: boolean; stage?: string; error?: string; reportId?: string };
+      try {
+        data = await response.json();
+      } catch {
+        const err = new Error("Failed to parse response from server");
+        (err as unknown as { stage: string }).stage = "download file";
+        throw err;
+      }
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Analysis failed");
+        const err = new Error(data.error || "Analysis failed");
+        (err as unknown as { stage: string }).stage = data.stage || "Gemini call";
+        throw err;
       }
 
       updateFileState({
@@ -181,13 +192,17 @@ export default function UploadPage() {
         reportId: data.reportId,
       });
 
-      return data.reportId;
+      return data.reportId || null;
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Processing failed";
+      const stage = (err as { stage?: string })?.stage || "storage upload";
+      const rawMsg = err instanceof Error ? err.message : "Processing failed";
+      const formattedError = `[${stage}] ${rawMsg}`;
+      console.error(`[Upload Error: ${stage}]`, err);
       updateFileState({
         status: "error",
-        errorMessage: msg,
+        errorMessage: formattedError,
       });
+      toast.error(formattedError);
       return null;
     }
   };
@@ -233,7 +248,9 @@ export default function UploadPage() {
         toast.success(`Processed ${completedIds.length} of ${files.length} documents!`);
         router.push("/dashboard");
       } else {
-        setGlobalError("Failed to process the documents. Please retry.");
+        const failedFile = files.find((f) => f.status === "error" || f.errorMessage);
+        const errMsg = failedFile?.errorMessage || "Failed to process the documents. Please retry.";
+        setGlobalError(errMsg);
       }
     } catch (err: unknown) {
       setIsProcessing(false);
