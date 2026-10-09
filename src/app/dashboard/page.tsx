@@ -586,10 +586,14 @@ export default function DashboardPage() {
                 <select
                   value={selectedTest}
                   onChange={(e) => setSelectedTest(e.target.value)}
-                  className="px-3.5 py-1.5 rounded-2xl glass text-xs font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500/50 border border-white/40 dark:border-white/15"
+                  className="px-3.5 py-1.5 rounded-2xl glass text-xs font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500/50 border border-white/40 dark:border-white/15 cursor-pointer bg-white/70 dark:bg-slate-900/70"
                 >
                   {testNames.map((name) => (
-                    <option key={name} value={name} className="text-foreground bg-slate-900">
+                    <option
+                      key={name}
+                      value={name}
+                      className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100"
+                    >
                       {name}
                     </option>
                   ))}

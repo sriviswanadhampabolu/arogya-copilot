@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
   --background: #eef6f9;
   --foreground: #0f172a;
   --foreground-muted: #475569;
@@ -26,6 +27,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: #070b14;
   --foreground: #f8fafc;
   --foreground-muted: #94a3b8;
@@ -46,6 +48,26 @@
   --chart-grid: rgba(255, 255, 255, 0.08);
   --chart-tooltip-bg: rgba(15, 23, 42, 0.95);
   --chart-tooltip-border: rgba(255, 255, 255, 0.15);
+}
+
+/* Ensure native select and option elements have high contrast in both themes */
+select {
+  color-scheme: light;
+}
+
+.dark select {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+.dark select option,
+html.dark select option {
+  background-color: #0f172a;
+  color: #f8fafc;
 }
 
 body {

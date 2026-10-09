@@ -56,13 +56,13 @@ function JsonNode({
       <div className="font-mono text-xs leading-relaxed select-text">
         <div
           style={indentStyle}
-          className="flex items-center gap-1 hover:bg-white/5 dark:hover:bg-white/5 py-0.5 rounded px-1 group cursor-pointer"
+          className="flex items-center gap-1 hover:bg-white/5 py-0.5 rounded px-1 group cursor-pointer"
           onClick={() => !isEmpty && setExpanded(!expanded)}
         >
           {!isEmpty ? (
             <button
               type="button"
-              className="w-4 h-4 flex items-center justify-center text-foreground/40 group-hover:text-foreground/80"
+              className="w-4 h-4 flex items-center justify-center text-slate-400 group-hover:text-slate-200"
             >
               {expanded ? (
                 <ChevronDown className="w-3.5 h-3.5" />
@@ -75,21 +75,21 @@ function JsonNode({
           )}
 
           {name && (
-            <span className="text-teal-600 dark:text-teal-400 font-semibold">
+            <span className="text-teal-400 font-semibold">
               &quot;{name}&quot;:{" "}
             </span>
           )}
 
-          <span className="text-foreground/70 font-semibold">{openBracket}</span>
+          <span className="text-slate-300 font-semibold">{openBracket}</span>
 
           {!expanded && !isEmpty && (
-            <span className="text-foreground/40 text-[11px] px-1.5 py-0.2 rounded bg-white/10 mx-1">
+            <span className="text-slate-400 text-[11px] px-1.5 py-0.2 rounded bg-white/10 mx-1">
               {isArray ? `${keys.length} items` : `${keys.length} keys`}
             </span>
           )}
 
           {!expanded && (
-            <span className="text-foreground/70 font-semibold">
+            <span className="text-slate-300 font-semibold">
               {closeBracket}
               {!isLast ? "," : ""}
             </span>
@@ -108,7 +108,7 @@ function JsonNode({
                 defaultExpanded={depth < 2}
               />
             ))}
-            <div style={indentStyle} className="text-foreground/70 font-semibold py-0.5 pl-5">
+            <div style={indentStyle} className="text-slate-300 font-semibold py-0.5 pl-5">
               {closeBracket}
               {!isLast ? "," : ""}
             </div>
@@ -122,36 +122,36 @@ function JsonNode({
   let valueDisplay = null;
   if (typeof value === "string") {
     valueDisplay = (
-      <span className="text-emerald-600 dark:text-emerald-400 break-all">
+      <span className="text-emerald-400 break-all">
         &quot;{value}&quot;
       </span>
     );
   } else if (typeof value === "number") {
-    valueDisplay = <span className="text-amber-600 dark:text-amber-400">{value}</span>;
+    valueDisplay = <span className="text-amber-400">{value}</span>;
   } else if (typeof value === "boolean") {
     valueDisplay = (
-      <span className="text-purple-600 dark:text-purple-400 font-bold">
+      <span className="text-purple-400 font-bold">
         {value ? "true" : "false"}
       </span>
     );
   } else if (value === null) {
     valueDisplay = <span className="text-slate-400 italic">null</span>;
   } else {
-    valueDisplay = <span className="text-foreground">{String(value)}</span>;
+    valueDisplay = <span className="text-slate-200">{String(value)}</span>;
   }
 
   return (
     <div
       style={indentStyle}
-      className="font-mono text-xs leading-relaxed py-0.5 px-1 hover:bg-white/5 dark:hover:bg-white/5 rounded flex items-start gap-1 select-text pl-5"
+      className="font-mono text-xs leading-relaxed py-0.5 px-1 hover:bg-white/5 rounded flex items-start gap-1 select-text pl-5"
     >
       {name && (
-        <span className="text-teal-600 dark:text-teal-400 font-semibold shrink-0">
+        <span className="text-teal-400 font-semibold shrink-0">
           &quot;{name}&quot;:{" "}
         </span>
       )}
       <span className="break-all">{valueDisplay}</span>
-      {!isLast && <span className="text-foreground/60">,</span>}
+      {!isLast && <span className="text-slate-400">,</span>}
     </div>
   );
 }
@@ -298,7 +298,7 @@ export function FhirModal({ isOpen, onClose, bundle, title }: FhirModalProps) {
         </div>
 
         {/* Modal Body: Collapsible syntax-highlighted JSON */}
-        <div className="flex-1 overflow-auto p-4 sm:p-6 bg-slate-950/60 dark:bg-black/80 text-foreground select-text custom-scrollbar">
+        <div className="flex-1 overflow-auto p-4 sm:p-6 bg-slate-950 text-slate-100 select-text custom-scrollbar">
           <div key={expandAllKey} className="space-y-0.5">
             <JsonNode
               value={bundle}

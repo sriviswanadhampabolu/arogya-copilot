@@ -944,13 +944,13 @@ export default function ProfilePage() {
                   id="profile-gender"
                   value={profile.gender}
                   onChange={(e) => setProfile({ ...profile, gender: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-2xl glass text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                  className="w-full px-4 py-2.5 rounded-2xl glass text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/50 cursor-pointer bg-white/70 dark:bg-slate-900/70"
                 >
-                  <option value="" className="text-foreground bg-slate-900">Select option</option>
-                  <option value="Male" className="text-foreground bg-slate-900">Male</option>
-                  <option value="Female" className="text-foreground bg-slate-900">Female</option>
-                  <option value="Non-Binary" className="text-foreground bg-slate-900">Non-Binary</option>
-                  <option value="Prefer not to say" className="text-foreground bg-slate-900">Prefer not to say</option>
+                  <option value="" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">Select option</option>
+                  <option value="Male" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">Male</option>
+                  <option value="Female" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">Female</option>
+                  <option value="Non-Binary" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">Non-Binary</option>
+                  <option value="Prefer not to say" className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">Prefer not to say</option>
                 </select>
               </div>
 
