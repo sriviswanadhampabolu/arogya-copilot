@@ -7,7 +7,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useT } from "@/i18n/context";
 import { createClient } from "@/utils/supabase/client";
-import { Activity, LogOut, User as UserIcon, Shield, ChevronDown } from "lucide-react";
+import { Activity, LogOut, User as UserIcon, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import type { User } from "@supabase/supabase-js";
 
@@ -135,14 +135,6 @@ export function TopBar() {
                         {t("nav_my_profile")}
                       </Link>
 
-                      <Link
-                        href="/architecture"
-                        onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs hover:bg-teal-500/10 text-foreground transition-colors"
-                      >
-                        <Shield className="w-4 h-4 text-sky-500" />
-                        {t("nav_architecture")}
-                      </Link>
 
                       <div className="border-t border-black/5 dark:border-white/10 my-1" />
 

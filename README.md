@@ -6,13 +6,14 @@
 Transforming messy, paper-based medical reports and prescriptions into structured, multilingual, ABDM & HL7 FHIR R4-compliant health intelligence.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://arogya-copilot.vercel.app/)
+[![Demo Video](https://img.shields.io/badge/Demo%20Video-Google%20Drive-34A853?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini%20Flash-4285F4?style=for-the-badge&logo=google)](https://deepmind.google/technologies/gemini/)
 [![HL7 FHIR](https://img.shields.io/badge/Standard-HL7%20FHIR%20R4-E01E5A?style=for-the-badge)](https://hl7.org/fhir/)
 [![ABDM](https://img.shields.io/badge/Ecosystem-ABDM%20%2F%20ABHA-FF9933?style=for-the-badge)](https://abdm.gov.in/)
 [![Supabase](https://img.shields.io/badge/Database-Supabase%20Postgres-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 
-[🌐 **Live Application**](https://arogya-copilot.vercel.app/) • [🔑 **Quick Test Access**](#-evaluator-quick-test-access) • [🏗️ **Architecture Pipeline**](https://arogya-copilot.vercel.app/architecture) • [📄 **FHIR R4 Schema**](#-fhir-r4--abdm-interoperability)
+[🌐 **Live Application**](https://arogya-copilot.vercel.app/) • [📹 **Demo Video**](https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link) • [🔑 **Quick Test Access**](#-evaluator-quick-test-access) • [🏗️ **Architecture Pipeline**](#️-system-architecture--7-stage-pipeline) • [📄 **FHIR R4 Schema**](#-fhir-r4--abdm-interoperability)
 
 </div>
 
@@ -20,11 +21,17 @@ Transforming messy, paper-based medical reports and prescriptions into structure
 
 ## ⚡ Evaluator Quick Test Access
 
+> [!TIP]
+> **For Evaluators & Judges:**
+> - 🎥 **Demo Video Link:** [https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link](https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link)
+> - 🔑 **Evaluator Login:** `demo@arogya.com` / `ArogyaDemo@123`
+
 | Resource | Details |
 | :--- | :--- |
+| **Demo Video (Google Drive)** | **[https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link](https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link)** |
 | **Live Production URL** | **[https://arogya-copilot.vercel.app/](https://arogya-copilot.vercel.app/)** |
-| **Demo Account Email** | `demo@arogya.com` |
-| **Demo Account Password** | `ArogyaDemo@123` |
+| **Evaluator Email** | `demo@arogya.com` |
+| **Evaluator Password** | `ArogyaDemo@123` |
 | **Self Sign-Up** | Instant registration available on [`/signup`](https://arogya-copilot.vercel.app/signup) |
 | **Sample Data** | 1-Click sample FHIR bundles can be imported via **Profile** (`/profile`) |
 
@@ -124,6 +131,8 @@ Arogya Copilot leverages **Google Gemini Multimodal Vision AI** and internationa
 
 ## 🧪 3-Minute Judging Walkthrough
 
+> 📺 **Demo Video Walkthrough:** [https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link](https://drive.google.com/file/d/1yE7pYjugOdvbn-stG0dUxHT3Ab4hFDtl/view?usp=drive_link)
+
 To quickly evaluate the platform, follow this path:
 
 1. **Log In**: Navigate to [https://arogya-copilot.vercel.app/login](https://arogya-copilot.vercel.app/login) and use `demo@arogya.com` / `ArogyaDemo@123`.
@@ -132,7 +141,7 @@ To quickly evaluate the platform, follow this path:
 4. **Inspect FHIR R4 (`/reports/[id]`)**: Open any report and click **"Inspect FHIR R4 Bundle"** to inspect standard JSON clinical data.
 5. **Test Multilingual Translation**: Click the language toggle to translate findings into **Telugu (తెలుగు)** or **Hindi (हिन्दी)**.
 6. **Chat with Copilot (`/chat`)**: Ask clinical questions regarding the uploaded test findings and observe safety guardrails.
-7. **Inspect System Architecture (`/architecture`)**: Review the visual pipeline diagram and clinical data specification.
+7. **Inspect System Architecture**: Review the 7-stage pipeline diagram and technical specifications below in this README.
 
 ---
 

@@ -8,7 +8,6 @@ import {
   UploadCloud,
   MessageSquare,
   UserCheck,
-  Layers,
 } from "lucide-react";
 
 import { useT } from "@/i18n/context";
@@ -22,7 +21,6 @@ export function Sidebar() {
     { name: t("nav_upload"), href: "/upload", icon: UploadCloud },
     { name: t("nav_chat"), href: "/chat", icon: MessageSquare },
     { name: t("nav_profile"), href: "/profile", icon: UserCheck },
-    { name: t("nav_architecture"), href: "/architecture", icon: Layers },
   ];
 
   return (
